@@ -60,13 +60,26 @@ let vitor: ProfileTypes.person = User({
   age: 18,
 })
 
-let fn = (person: ProfileTypes.person) => {
+let fn = (person: ProfileTypes.person, ~isSpecial) => {
   switch person {
+  | User({name}) if isSpecial => `Hello ${name} you are special`
   | User({name}) => `Hello ${name}`
   | Admin(name) => `Hello ${name}`
   | Person({name}) => `Hello ${name}`
   }
 }
+
+let hello = (~person: ProfileTypes.person, ~isSpecial: bool=false, ()) => {
+  switch person {
+  | User({name: "Vitor"}) if isSpecial => `Hello you are special`
+  | User({name: "Vitor"}) => `Hello`
+  | User({name}) => `Hello, ${name}`
+  | Admin(name) => `Hello ${name}`
+  | Person({name}) => `Hello ${name}`
+  }
+}
+
+let msg = hello(~isSpecial=true, ())
 
 // polyvariants
 
@@ -97,3 +110,6 @@ let _mult = (m, n, f, x) => m(n(f))(x) // (λm.λn.λf.λx.m (n f) x)
 let _exp = (m, n, f, x) => n(m)(f)(x) // (λm.λn.λf.λx.n m f x)
 let _pred = (n, f, x) => n((g, h) => h(g(f)))(u => x)(u => u) // (λn.λf.λx.n (λg.λh.h (g f)) (λu.x) (λu.u))
 let _sub = (m, n) => n(_pred)(m) // (λm.λn.n pred m)
+
+let str = "Vitor"
+let result = str->Js.String2.includes(str, 'x')
